@@ -1,0 +1,44 @@
+{
+  "name": "elbow",
+  "version": "0.0.0",
+  "description": "An easy way to test REST API responses with Mocha",
+  "main": "lib/index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GochoMugo/elbow.git"
+  },
+  "keywords": [
+    "REST",
+    "API",
+    "schema",
+    "mocha"
+  ],
+  "author": "GochoMugo <mugo@forfuture.co.ke>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/GochoMugo/elbow/issues"
+  },
+  "homepage": "https://github.com/GochoMugo/elbow#readme",
+  "bin": {
+    "elbow": "bin/elbow"
+  },
+  "dependencies": {
+    "commander": "^2.8.1",
+    "jayschema": "^0.3.1",
+    "lodash": "^3.9.1",
+    "supertest": "^1.0.1",
+    "should": "^6.0.3"
+  },
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-cli": "^0.1.13",
+    "grunt-contrib-jshint": "^0.11.2",
+    "grunt-mocha-test": "^0.12.7"
+  }
+}
