@@ -3,7 +3,7 @@
 
 > An **easy** way to test REST API responses with Mocha
 
-[![Version](https://img.shields.io/npm/v/elbow.svg)](https://www.npmjs.com/package/elbow) [![Build Status](https://travis-ci.org/GochoMugo/elbow.svg?branch=master)](https://travis-ci.org/GochoMugo/elbow) [![Coverage Status](https://coveralls.io/repos/GochoMugo/elbow/badge.svg)](https://coveralls.io/r/GochoMugo/elbow) [![Dependency Status](https://gemnasium.com/GochoMugo/elbow.svg)](https://gemnasium.com/GochoMugo/elbow)
+[![Version](https://img.shields.io/npm/v/elbow.svg)](https://www.npmjs.com/package/elbow) [![Build Status](https://travis-ci.org/GochoMugo/elbow.svg?branch=master)](https://travis-ci.org/GochoMugo/elbow) [![Coverage Status](https://coveralls.io/repos/GochoMugo/elbow/badge.svg?branch=master)](https://coveralls.io/r/GochoMugo/elbow?branch=master) [![Dependency Status](https://gemnasium.com/GochoMugo/elbow.svg)](https://gemnasium.com/GochoMugo/elbow)
 
 elbow = [mocha](http://mochajs.org/) + [superagent](http://visionmedia.github.io/superagent/) + [jayschema](https://github.com/natesilva/jayschema) + [awesomeness](https://www.dropbox.com/s/flwsp52rm1r9xrw/awesomeness.jpg?dl=0)
 
@@ -62,7 +62,7 @@ Loads your schemas.
   * `schemas`: object holding your schemas whose keys are the various endpoints
 
 
-## schemas
+## schemas:
 
 All schemas should be placed in a single directory. They should be valid JSON documents with the extension `.json`.
 
@@ -96,9 +96,10 @@ Required key-value pairs include:
 * `endpoint` (String): endpoint to test. This will be resolved to an absolute url using a base url.
 * `description` (String): describes the significance of the Http response.
 * `methods` (Array): all the Http methods to use to test the endpoint
-* `params` (Object): parameters to pass to endpoint
+  * possible values: `"get"`, `"post"`, `"put"`
+* `params` (Object): parameters to pass to endpoint.
 
-The rest of the documents will be used as is in validation.
+The rest of the document will be used *as is* in validation.
 
 
 ## terminal usage:
