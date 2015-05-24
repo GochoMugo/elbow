@@ -2,6 +2,7 @@
   "camelcase": true,
   "curly": true,
   "eqeqeq": true,
+  "expr": true,
   "globalstrict": true,
   "indent": 2,
   "maxlen": 72,

@@ -1,9 +1,18 @@
 
 # elbow
 
-> An easy way to test REST API responses with Mocha
+> An **easy** way to test REST API responses with Mocha
+
+[![Version](https://img.shields.io/npm/v/elbow.svg)](https://www.npmjs.com/package/elbow) [![Build Status](https://travis-ci.org/GochoMugo/elbow.svg?branch=master)](https://travis-ci.org/GochoMugo/elbow) [![Coverage Status](https://coveralls.io/repos/GochoMugo/elbow/badge.svg)](https://coveralls.io/r/GochoMugo/elbow)
 
 elbow = [mocha](http://mochajs.org/) + [supertest](http://visionmedia.github.io/superagent/) + [jayschema](https://github.com/natesilva/jayschema) + [awesomeness](https://www.dropbox.com/s/flwsp52rm1r9xrw/awesomeness.jpg?dl=0)
+
+
+## what makes it easy?
+
+1. you only write one, short test file with one test suite
+2. your schemas define what endpoints it is concerned with
+3. it fits just right in your work flow
 
 
 ## usage:
@@ -14,7 +23,7 @@ In a test script:
 var elbow = require("elbow");
 
 describe("testing Http Responses", function() {
-  elbow.run("http://localhost:9090/", __dirname + "/../schemas");
+  elbow.run(it, "http://localhost:9090/", __dirname + "/../schemas");
 });
 ```
 
@@ -24,6 +33,31 @@ describe("testing Http Responses", function() {
 ```bash
 ⇒ npm install elbow --save-dev
 ```
+
+
+## API
+
+```js
+var elbow = require("elbow");
+```
+
+### elbow.run(it, baseUrl, schemaDir)
+
+Runs your tests.
+
+* `it` (Function): it provided by Mocha.
+* `baseUrl` (String): base url of the server. This is used to resolve the relative urls (endpoints).
+* `schemaDir` (String): path to the directory holding your schemas.
+
+
+## elbow.schemas(schemaDir, callback)
+
+Loads your schemas.
+
+* `schemaDir` (String): path to the directory holding your schemas.
+* `callback` (Function):
+  * signature: `callback(err, schemas)`
+  * `schemas`: object holding your schemas whose keys are the various endpoints
 
 
 ## schemas
@@ -38,7 +72,7 @@ A sample schema file would look like:
 
   "endpoint": "/transactions/transfers/charges",
   "description": "transfer charges",
-  "methods": ["get"],
+  "methods": ["get", "post"],
   "params": {
     "to": "registered",
     "amount": 5000
@@ -60,6 +94,22 @@ A sample schema file would look like:
 * `params` (Object): parameters to pass to endpoint
 
 The rest of the documents will be used as is in validation.
+
+
+## terminal usage:
+
+Elbow is also available from your terminal.
+
+If installed globally, the command `elbow` will be readily available. Otherwise, elbow will be available at `./node_modules/.bin/elbow`.
+
+
+### listing your schemas
+
+To list your schemas with the respective descriptions.
+
+```bash
+⇒ elbow --list [pathToSchemaDir]
+```
 
 
 ## license:
