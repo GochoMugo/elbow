@@ -29,6 +29,8 @@ describe("testing Http Responses", function() {
 
 See a [sample schema](#schema).
 
+See a [sample test output](#output).
+
 
 ## installation:
 
@@ -100,6 +102,23 @@ Required key-value pairs include:
 * `params` (Object): parameters to pass to endpoint.
 
 The rest of the document will be used *as is* in validation.
+
+
+## test output:
+
+<a name="output"></a>
+Sample Test Output:
+
+```bash
+  ✓ GET /params (testing the sending of params) [params] (107ms)
+  ✓ POST /params (testing the sending of params) [params] (92ms)
+  ✓ PUT /params (testing the sending of params) [params]
+  ✓ GET /simple (testing the response body only) [simple]
+  ✓ POST /simple (testing the response body only) [simple]
+  ✓ PUT /simple (testing the response body only) [simple]
+```
+
+The **method** and **endpoint** is shown for each test case. The **description** of the schema is shown between `(` and `)`. The **filename** (without the extension) of the schema used in the test case is shown between `[` and `]`.
 
 
 ## terminal usage:
