@@ -3,7 +3,7 @@
 
 > An **easy** way to test REST API responses with Mocha
 
-[![Version](https://img.shields.io/npm/v/elbow.svg)](https://www.npmjs.com/package/elbow) [![Build Status](https://travis-ci.org/GochoMugo/elbow.svg?branch=master)](https://travis-ci.org/GochoMugo/elbow) [![Coverage Status](https://coveralls.io/repos/GochoMugo/elbow/badge.svg)](https://coveralls.io/r/GochoMugo/elbow)
+[![Version](https://img.shields.io/npm/v/elbow.svg)](https://www.npmjs.com/package/elbow) [![Build Status](https://travis-ci.org/GochoMugo/elbow.svg?branch=master)](https://travis-ci.org/GochoMugo/elbow) [![Coverage Status](https://coveralls.io/repos/GochoMugo/elbow/badge.svg)](https://coveralls.io/r/GochoMugo/elbow) [![Dependency Status](https://gemnasium.com/GochoMugo/elbow.svg)](https://gemnasium.com/GochoMugo/elbow)
 
 elbow = [mocha](http://mochajs.org/) + [superagent](http://visionmedia.github.io/superagent/) + [jayschema](https://github.com/natesilva/jayschema) + [awesomeness](https://www.dropbox.com/s/flwsp52rm1r9xrw/awesomeness.jpg?dl=0)
 
