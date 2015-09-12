@@ -39,35 +39,39 @@ const validator = new Jayschema(Jayschema.loaders.http);
 function requireAll(schemaDir, callback) {
   debug("loading schemas");
 
+  let files;
+
+  try {
+    files = fs.readdirSync(schemaDir);
+  } catch(readdirErr) {
+    return callback(readdirErr);
+  }
+
   let schemas = [];
 
-  return fs.readdir(schemaDir, function(readdirErr, files) {
-    if (readdirErr) {
-      return callback(readdirErr);
+  for (let index = 0; index < files.length; index++) {
+    const file = files[index];
+
+    // if it is NOT a json file, ignore it
+    if (path.extname(file) !== ".json") {
+      continue;
     }
 
-    files.forEach(function(file) {
-      // if it is NOT a json file, ignore it
-      if (path.extname(file) !== ".json") {
-        return null;
-      }
+    const abspath = path.join(schemaDir, file);
+    let schema;
 
-      const abspath = path.join(schemaDir, file);
-      let schema;
+    // try load the schema! If it fails, stop immediately
+    try {
+      schema = require(abspath);
+    } catch (requireErr) {
+      return callback(requireErr);
+    }
 
-      // try load the schema! If it fails, stop immediately
-      try {
-        schema = require(abspath);
-      } catch (requireErr) {
-        return callback(requireErr);
-      }
+    schema.filepath = abspath;
+    schemas.push(schema);
+  }
 
-      schema.filepath = abspath;
-      schemas.push(schema);
-    });
-
-    return callback(null, schemas);
-  });
+  return callback(null, schemas);
 }
 
 

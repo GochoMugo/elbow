@@ -33,7 +33,11 @@ describe("module", function() {
 
 describe("actual use case", function() {
   const port = 9095;
-  testApp.listen(port);
+
+  before(function(done) {
+    testApp.listen(port, done);
+  });
+
   elbow.run(it, `http://localhost:${port}`, path.join(__dirname, "schema"), {
     timeout: 5000,
   });
@@ -42,6 +46,10 @@ describe("actual use case", function() {
 
 describe("sequence", function() {
   const port = 9097;
-  testSequence.listen(port);
+
+  before(function(done) {
+    testSequence.listen(port, done);
+  });
+
   elbow.run(it, `http://localhost:${port}`, path.join(__dirname, "sequence"));
 });
