@@ -152,6 +152,11 @@ To list your schemas with the respective descriptions.
 ```
 
 
+### notes:
+
+1. synchronous file operations are used internally to ensure test cases are executed in correct order by mocha.
+
+
 ## license:
 
 **The MIT License (MIT)**
