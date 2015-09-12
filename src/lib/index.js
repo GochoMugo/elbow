@@ -149,7 +149,11 @@ function makeRequest(baseUrl, method, schema, done) {
     [getMethodFuncName(method)](url.resolve(baseUrl, schema.endpoint))
     [getParamFuncName(method)](schema.params || { })
     .end(function(err, response) {
-      should(err).not.be.ok();
+      // catch network errors, etc.
+      if (!response) {
+        should(err).not.be.ok();
+      }
+      should(response).be.ok();
       return validateResponse(schema, response.body, done);
     });
 }
