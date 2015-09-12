@@ -61,7 +61,7 @@ Loads your schemas.
 * `schemaDir` (String): path to the directory holding your schemas.
 * `callback` (Function):
   * signature: `callback(err, schemas)`
-  * `schemas`: object holding your schemas whose keys are the various endpoints
+  * `schemas` (Array): array holding your schemas
 
 
 ## schemas:
@@ -98,7 +98,7 @@ Required key-value pairs include:
 * `endpoint` (String): endpoint to test. This will be resolved to an absolute url using a base url.
 * `description` (String): describes the significance of the Http response.
 * `methods` (Array): all the Http methods to use to test the endpoint
-  * possible values: `"get"`, `"post"`, `"put"`
+  * possible values: `"get"`, `"post"`, `"put"`, `"delete"`
 * `params` (Object): parameters to pass to endpoint.
 
 The rest of the document will be used *as is* in validation.
@@ -110,12 +110,14 @@ The rest of the document will be used *as is* in validation.
 Sample Test Output:
 
 ```bash
-  ✓ GET /params (testing the sending of params) [params] (107ms)
-  ✓ POST /params (testing the sending of params) [params] (92ms)
-  ✓ PUT /params (testing the sending of params) [params]
-  ✓ GET /simple (testing the response body only) [simple]
-  ✓ POST /simple (testing the response body only) [simple]
-  ✓ PUT /simple (testing the response body only) [simple]
+  ✓ GET /params (testing the sending of params) [/home/gocho/Repos/GochoMugo/github/elbow/test/schema/params.json] (60ms)
+  ✓ POST /params (testing the sending of params) [/home/gocho/Repos/GochoMugo/github/elbow/test/schema/params.json]
+  ✓ PUT /params (testing the sending of params) [/home/gocho/Repos/GochoMugo/github/elbow/test/schema/params.json]
+  ✓ DELETE /params (testing the sending of params) [/home/gocho/Repos/GochoMugo/github/elbow/test/schema/params.json]
+  ✓ GET /simple (testing the response body only) [/home/gocho/Repos/GochoMugo/github/elbow/test/schema/simple.json]
+  ✓ POST /simple (testing the response body only) [/home/gocho/Repos/GochoMugo/github/elbow/test/schema/simple.json]
+  ✓ PUT /simple (testing the response body only) [/home/gocho/Repos/GochoMugo/github/elbow/test/schema/simple.json]
+  ✓ DELETE /simple (testing the response body only) [/home/gocho/Repos/GochoMugo/github/elbow/test/schema/simple.json]
 ```
 
 The **method** and **endpoint** is shown for each test case. The **description** of the schema is shown between `(` and `)`. The **filename** (without the extension) of the schema used in the test case is shown between `[` and `]`.
@@ -133,7 +135,7 @@ If installed globally, the command `elbow` will be readily available. Otherwise,
 To list your schemas with the respective descriptions.
 
 ```bash
-⇒ elbow --list [pathToSchemaDir]
+⇒ elbow --list [absolutePathToSchemaDir]
 ```
 
 
@@ -142,4 +144,3 @@ To list your schemas with the respective descriptions.
 **The MIT License (MIT)**
 
 Copyright (c) 2015 GochoMugo <mugo@forfuture.co.ke>
-
