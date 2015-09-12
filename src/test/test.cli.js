@@ -1,5 +1,3 @@
-"use strict";
-
 /*
  * Command-line interface
  *

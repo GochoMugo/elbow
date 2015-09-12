@@ -1,24 +1,29 @@
 /**
-* Run script for Grunt, task runner
-*
-* The MIT License (MIT)
-* Copyright (c) 2015 GochoMugo <mugo@forfuture.co.ke>
-*/
+ * Run script for Grunt, task runner
+ *
+ * The MIT License (MIT)
+ * Copyright (c) 2015 GochoMugo <mugo@forfuture.co.ke>
+ */
 
-
+// npm-installed modules
 "use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
 
-exports = module.exports = function(grunt) {
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+var _loadGruntTasks = require("load-grunt-tasks");
+
+var _loadGruntTasks2 = _interopRequireDefault(_loadGruntTasks);
+
+exports["default"] = function (grunt) {
+  (0, _loadGruntTasks2["default"])(grunt);
+
   grunt.initConfig({
-    jshint: {
-      all: [
-        "Gruntfile.js", "lib/**/*.js",
-        "test/**/*.js", "benchmark/**/*.js"
-      ],
-      options: {
-        jshintrc: true
-      }
+    eslint: {
+      src: ["src/**/*.js"]
     },
     mochaTest: {
       test: {
@@ -27,13 +32,12 @@ exports = module.exports = function(grunt) {
           quiet: false,
           clearRequireCache: false
         },
-        src: ["test/**/test.*.js"]
+        src: ["test/test.*.js"]
       }
     }
   });
 
-  grunt.loadNpmTasks("grunt-contrib-jshint");
-  grunt.loadNpmTasks("grunt-mocha-test");
-
-  grunt.registerTask("test", ["jshint", "mochaTest"]);
+  grunt.registerTask("test", ["eslint", "mochaTest"]);
 };
+
+module.exports = exports["default"];

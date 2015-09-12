@@ -1,0 +1,10 @@
+# es6 source
+src/
+
+# tests
+test/
+
+# misc
+.editorconfig
+.eslintrc
+.travis.yml

@@ -5,54 +5,30 @@
  * Copyright (c) 2015 GochoMugo <mugo@forfuture.co.ke>
  */
 
-"use strict";
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+export default {
+  schemas: requireAll,
+  run: createTestSuite,
+};
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 
 // built-in modules
+import fs from "fs";
+import path from "path";
+import url from "url";
 
-var _fs = require("fs");
-
-var _fs2 = _interopRequireDefault(_fs);
-
-var _path = require("path");
-
-var _path2 = _interopRequireDefault(_path);
-
-var _url = require("url");
 
 // npm-installed modules
+import Debug from "debug";
+import Jayschema from "jayschema";
+import request from "superagent";
+import should from "should";
 
-var _url2 = _interopRequireDefault(_url);
-
-var _debug = require("debug");
-
-var _debug2 = _interopRequireDefault(_debug);
-
-var _jayschema = require("jayschema");
-
-var _jayschema2 = _interopRequireDefault(_jayschema);
-
-var _superagent = require("superagent");
-
-var _superagent2 = _interopRequireDefault(_superagent);
-
-var _should = require("should");
 
 // module variables
+const debug = Debug("elbow:main");
+const validator = new Jayschema(Jayschema.loaders.http);
 
-var _should2 = _interopRequireDefault(_should);
-
-exports["default"] = {
-  schemas: requireAll,
-  run: createTestSuite
-};
-var debug = (0, _debug2["default"])("elbow:main");
-var validator = new _jayschema2["default"](_jayschema2["default"].loaders.http);
 
 /*
  * Loads all the Schemas into memory
@@ -63,21 +39,21 @@ var validator = new _jayschema2["default"](_jayschema2["default"].loaders.http);
 function requireAll(schemaDir, callback) {
   debug("loading schemas");
 
-  var schemas = [];
+  let schemas = [];
 
-  return _fs2["default"].readdir(schemaDir, function (readdirErr, files) {
+  return fs.readdir(schemaDir, function(readdirErr, files) {
     if (readdirErr) {
       return callback(readdirErr);
     }
 
-    files.forEach(function (file) {
+    files.forEach(function(file) {
       // if it is NOT a json file, ignore it
-      if (_path2["default"].extname(file) !== ".json") {
+      if (path.extname(file) !== ".json") {
         return null;
       }
 
-      var abspath = _path2["default"].join(schemaDir, file);
-      var schema = undefined;
+      const abspath = path.join(schemaDir, file);
+      let schema;
 
       // try load the schema! If it fails, stop immediately
       try {
@@ -94,6 +70,7 @@ function requireAll(schemaDir, callback) {
   });
 }
 
+
 /*
  * Determine name of param-sending function to use (on superagent) from the method
  *
@@ -103,14 +80,15 @@ function requireAll(schemaDir, callback) {
 function getParamFuncName(method) {
   method = method.toLowerCase();
   switch (method) {
-    case "get":
-    case "head":
-      return "query";
-    case "post":
-    case "put":
-      return "send";
+  case "get":
+  case "head":
+    return "query";
+  case "post":
+  case "put":
+    return "send";
   }
 }
+
 
 /*
  * Create test case label
@@ -120,8 +98,9 @@ function getParamFuncName(method) {
  * @return {String} label used for test case
  */
 function createTestCaseLabel(method, schema) {
-  return method.toUpperCase() + " " + (schema.endpoint || "") + " (" + schema.description + ") [" + schema.filename + "]";
+  return `${method.toUpperCase()} ${schema.endpoint || ""} (${schema.description}) [${schema.filename}]`;
 }
+
 
 /*
  * Validate a Http response using schema
@@ -131,12 +110,13 @@ function createTestCaseLabel(method, schema) {
  * @param  {Function} done - called once validation is completed
  */
 function validateResponse(schema, response, done) {
-  debug("validating response for " + schema.endpoint);
-  return validator.validate(response, schema, function (errs) {
-    (0, _should2["default"])(errs).not.be.ok();
+  debug(`validating response for ${schema.endpoint}`);
+  return validator.validate(response, schema, function(errs) {
+    should(errs).not.be.ok();
     return done();
   });
 }
+
 
 /*
  * Make a Http request with objective of validating its response
@@ -147,12 +127,16 @@ function validateResponse(schema, response, done) {
  * @param  {Function} done - function called once request is completed
  */
 function makeRequest(baseUrl, method, schema, done) {
-  debug("making " + method.toUpperCase() + " request to " + schema.endpoint);
-  return _superagent2["default"][method](_url2["default"].resolve(baseUrl, schema.endpoint))[getParamFuncName(method)](schema.params || {}).end(function (err, response) {
-    (0, _should2["default"])(err).not.be.ok();
-    return validateResponse(schema, response.body, done);
-  });
+  debug(`making ${method.toUpperCase()} request to ${schema.endpoint}`);
+  return request
+    [method](url.resolve(baseUrl, schema.endpoint))
+    [getParamFuncName(method)](schema.params || { })
+    .end(function(err, response) {
+      should(err).not.be.ok();
+      return validateResponse(schema, response.body, done);
+    });
 }
+
 
 /*
  * Create a test case (using "it" from mocha)
@@ -163,11 +147,12 @@ function makeRequest(baseUrl, method, schema, done) {
  * @param  {Object} schema - schema used to validate response
  */
 function createTestCase(it, baseUrl, method, schema) {
-  debug("creating test case for " + method.toUpperCase() + " " + schema.endpoint);
-  it(createTestCaseLabel(method, schema), function (done) {
+  debug(`creating test case for ${method.toUpperCase()} ${schema.endpoint}`);
+  it(createTestCaseLabel(method, schema), function(done) {
     return makeRequest(baseUrl, method, schema, done);
   });
 }
+
 
 /*
  * Create test cases (to be used in describe)
@@ -177,13 +162,14 @@ function createTestCase(it, baseUrl, method, schema) {
  * @param  {Object} schema - schema used to validate response
  */
 function createTestCases(it, baseUrl, schema) {
-  debug("creating tests cases for " + schema.endpoint);
+  debug(`creating tests cases for ${schema.endpoint}`);
 
   // each method in a schema
-  return schema.methods.forEach(function (method) {
+  return schema.methods.forEach(function(method) {
     return createTestCase(it, baseUrl, method, schema);
   });
 }
+
 
 /*
  * Create test suite
@@ -193,14 +179,13 @@ function createTestCases(it, baseUrl, schema) {
  * @param  {String} string - directory containing schemas
  */
 function createTestSuite(it, baseUrl, schemaDir) {
-  debug("creating test suite for schemas in " + schemaDir);
-  return requireAll(schemaDir, function (err, schemas) {
-    (0, _should2["default"])(err).not.be.ok();
+  debug(`creating test suite for schemas in ${schemaDir}`);
+  return requireAll(schemaDir, function(err, schemas) {
+    should(err).not.be.ok();
 
     // each schema
-    return schemas.forEach(function (schema) {
+    return schemas.forEach(function(schema) {
       return createTestCases(it, baseUrl, schema);
     });
   });
 }
-module.exports = exports["default"];

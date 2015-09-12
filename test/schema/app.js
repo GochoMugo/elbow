@@ -1,30 +1,43 @@
 // npm-installed modules
-var _ = require("lodash");
-var bodyParser = require('body-parser');
-var express = require("express");
+"use strict";
 
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+var _lodash = require("lodash");
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _bodyParser = require("body-parser");
+
+var _bodyParser2 = _interopRequireDefault(_bodyParser);
+
+var _express = require("express");
 
 // module variables
-var app = express();
 
+var _express2 = _interopRequireDefault(_express);
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+var app = (0, _express2["default"])();
+
+app.use(_bodyParser2["default"].json());
+app.use(_bodyParser2["default"].urlencoded({ extended: true }));
 
 // endpoints
-app.use("/simple", function(req, res) {
+app.use("/simple", function (req, res) {
   return res.json({
     username: "mugo",
     email: "mugo@forfuture.co.ke"
   });
 });
 
-
-app.use("/params", function(req, res) {
-  var resObj = _.keys(req.query).length === 0 ? req.body : req.query;
+app.use("/params", function (req, res) {
+  var resObj = _lodash2["default"].keys(req.query).length === 0 ? req.body : req.query;
   return res.json(resObj);
 });
 
-
-exports = module.exports = app;
-
+exports["default"] = app;
+module.exports = exports["default"];
