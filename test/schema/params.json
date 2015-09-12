@@ -3,7 +3,7 @@
 
   "endpoint": "/params",
   "description": "testing the sending of params",
-  "methods": ["get", "post", "put"],
+  "methods": ["get", "post", "put", "delete"],
   "params": {
     "username": "mugo",
     "email": "mugo@forfuture.co.ke"

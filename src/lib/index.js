@@ -77,14 +77,31 @@ function requireAll(schemaDir, callback) {
  * @param  {String} method - http method e.g. "get", "post"
  * @return {String} function name e.g. "send"
  */
+function getMethodFuncName(method) {
+  method = method.toLowerCase();
+  switch (method) {
+  case "delete":
+    return "del";
+  default:
+    return method;
+  }
+}
+
+
+/*
+ * Determine name of param-sending function to use (on superagent) from the method
+ *
+ * @param  {String} method - http method e.g. "get", "post"
+ * @return {String} function name e.g. "send"
+ */
 function getParamFuncName(method) {
   method = method.toLowerCase();
   switch (method) {
   case "get":
-  case "head":
     return "query";
   case "post":
   case "put":
+  case "delete":
     return "send";
   }
 }
@@ -98,7 +115,7 @@ function getParamFuncName(method) {
  * @return {String} label used for test case
  */
 function createTestCaseLabel(method, schema) {
-  return `${method.toUpperCase()} ${schema.endpoint || ""} (${schema.description}) [${schema.filename}]`;
+  return `${method.toUpperCase()} ${schema.endpoint || ""} (${schema.description}) [${schema.filepath}]`;
 }
 
 
@@ -129,7 +146,7 @@ function validateResponse(schema, response, done) {
 function makeRequest(baseUrl, method, schema, done) {
   debug(`making ${method.toUpperCase()} request to ${schema.endpoint}`);
   return request
-    [method](url.resolve(baseUrl, schema.endpoint))
+    [getMethodFuncName(method)](url.resolve(baseUrl, schema.endpoint))
     [getParamFuncName(method)](schema.params || { })
     .end(function(err, response) {
       should(err).not.be.ok();

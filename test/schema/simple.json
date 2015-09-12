@@ -3,7 +3,7 @@
 
   "endpoint": "/simple",
   "description": "testing the response body only",
-  "methods": ["get", "post", "put"],
+  "methods": ["get", "post", "put", "delete"],
   "params": {
     "username": "mugo"
   },
@@ -20,4 +20,3 @@
   },
   "required": ["username"]
 }
-
