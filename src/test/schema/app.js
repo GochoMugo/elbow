@@ -27,4 +27,14 @@ app.use("/params", function(req, res) {
 });
 
 
+app.use("/timeout", function(req, res) {
+  const timeout = 4000;
+  setTimeout(function() {
+    res.json({
+      timeout,
+    });
+  }, timeout);
+});
+
+
 export default app;

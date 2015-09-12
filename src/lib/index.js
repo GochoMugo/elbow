@@ -166,10 +166,15 @@ function makeRequest(baseUrl, method, schema, done) {
  * @param  {String} baseUrl - base url e.g. "http://localhost:9090/"
  * @param  {String} method - http method to use for request e.g. "get"
  * @param  {Object} schema - schema used to validate response
+ * @param  {Object} options - test configurations
  */
-function createTestCase(it, baseUrl, method, schema) {
+function createTestCase(it, baseUrl, method, schema, options) {
   debug(`creating test case for ${method.toUpperCase()} ${schema.endpoint}`);
   it(createTestCaseLabel(method, schema), function(done) {
+    // allow setting timeouts
+    if (options.timeout) {
+      this.timeout(options.timeout);
+    }
     return makeRequest(baseUrl, method, schema, done);
   });
 }
@@ -181,13 +186,14 @@ function createTestCase(it, baseUrl, method, schema) {
  * @param  {Function} it - it from mocha, for test cases
  * @param  {String} baseUrl - base url e.g. "http://localhost:9090/"
  * @param  {Object} schema - schema used to validate response
+ * @param  {Object} options - test configurations
  */
-function createTestCases(it, baseUrl, schema) {
+function createTestCases(it, baseUrl, schema, options) {
   debug(`creating tests cases for ${schema.endpoint}`);
 
   // each method in a schema
   return schema.methods.forEach(function(method) {
-    return createTestCase(it, baseUrl, method, schema);
+    return createTestCase(it, baseUrl, method, schema, options);
   });
 }
 
@@ -198,15 +204,16 @@ function createTestCases(it, baseUrl, schema) {
  * @param  {Function} it - it from mocha, for test cases
  * @param  {String} baseUrl - base url e.g. "http://localhost:9090/"
  * @param  {String} string - directory containing schemas
+ * @param  {Object} options - test configurations
  */
-function createTestSuite(it, baseUrl, schemaDir) {
+function createTestSuite(it, baseUrl, schemaDir, options={}) {
   debug(`creating test suite for schemas in ${schemaDir}`);
   return requireAll(schemaDir, function(err, schemas) {
     should(err).not.be.ok();
 
     // each schema
     return schemas.forEach(function(schema) {
-      return createTestCases(it, baseUrl, schema);
+      return createTestCases(it, baseUrl, schema, options);
     });
   });
 }

@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/schema#",
+
+  "endpoint": "/timeout",
+  "description": "testing the response body only",
+  "methods": ["get"],
+
+  "type": "object",
+  "properties": {
+    "timeout": {
+      "type": "integer"
+    }
+  },
+  "required": ["timeout"]
+}

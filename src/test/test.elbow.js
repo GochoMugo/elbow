@@ -30,7 +30,9 @@ describe("module", function() {
 describe("actual use case", function() {
   const port = 9095;
   testApp.listen(port);
-  elbow.run(it, `http://localhost:${port}`, `${__dirname}/schema`);
+  elbow.run(it, `http://localhost:${port}`, `${__dirname}/schema`, {
+    timeout: 5000,
+  });
 });
 
 
