@@ -6,6 +6,10 @@
  */
 
 
+// built-in modules
+import path from "path";
+
+
 // npm-installed modules
 import should from "should";
 
@@ -30,14 +34,14 @@ describe("module", function() {
 describe("actual use case", function() {
   const port = 9095;
   testApp.listen(port);
-  elbow.run(it, `http://localhost:${port}`, `${__dirname}/schema`, {
+  elbow.run(it, `http://localhost:${port}`, path.join(__dirname, "schema"), {
     timeout: 5000,
   });
 });
 
 
-describe.skip("sequence", function() {
+describe("sequence", function() {
   const port = 9097;
   testSequence.listen(port);
-  elbow.run(it, `http://localhost:${port}`, `${__dirname}/sequence`);
+  elbow.run(it, `http://localhost:${port}`, path.join(__dirname, "sequence"));
 });
