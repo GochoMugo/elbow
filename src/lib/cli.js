@@ -53,9 +53,9 @@ if (prog.list) {
       return out.error("no schema found");
     }
 
-    out.success("listing schemas:\n");
+    out.success("listing schemas\n");
     schemas.forEach(function(schema) {
-      console.log(`${schema.methods} ${schema.endpoint} (${schema.description}) -> ${schema.filepath}`);
+      console.log(`  ${schema.methods} ${schema.endpoint} (${schema.description}) -> ${schema.filepath}`);
     });
   });
 }
