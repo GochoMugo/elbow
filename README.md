@@ -120,7 +120,7 @@ Sample Test Output:
   ✓ DELETE /simple (testing the response body only) [/home/gocho/Repos/GochoMugo/github/elbow/test/schema/simple.json]
 ```
 
-The **method** and **endpoint** is shown for each test case. The **description** of the schema is shown between `(` and `)`. The **filename** (without the extension) of the schema used in the test case is shown between `[` and `]`.
+The **method** and **endpoint** is shown for each test case. The **description** of the schema is shown between `(` and `)`. The **absolute filepath** of the schema file used in the test case is shown between `[` and `]`.
 
 
 ## terminal usage:
