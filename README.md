@@ -23,7 +23,9 @@ A sample test script:
 var elbow = require("elbow");
 
 describe("testing Http Responses", function() {
-  elbow.run(it, "http://localhost:9090/", __dirname + "/../schema");
+  elbow.run(it, "http://localhost:9090/", __dirname + "/../schema", {
+    timeout: 5000,
+  });
 });
 ```
 
@@ -45,13 +47,15 @@ See a [sample test output](#output).
 var elbow = require("elbow");
 ```
 
-### elbow.run(it, baseUrl, schemaDir)
+### elbow.run(it, baseUrl, schemaDir [, options])
 
 Runs your tests.
 
 * `it` (Function): it provided by Mocha.
 * `baseUrl` (String): base url of the server. This is used to resolve the relative urls (endpoints).
 * `schemaDir` (String): path to the directory holding your schemas.
+* `options` (Object): test configurations
+  * `options.timeout` (Integer): test-specific timeout
 
 
 ### elbow.schemas(schemaDir, callback)
@@ -66,7 +70,9 @@ Loads your schemas.
 
 ## schemas:
 
-All schemas should be placed in a single directory. They should be valid JSON documents with the extension `.json`.
+Schemas, as defined in its [specification](http://spacetelescope.github.io/understanding-json-schema/UnderstandingJSONSchema.pdf), are valid JSON documents.
+
+All the schemas should be placed in a single directory. They should have the extension `.json`.
 
 <a name="schema"></a>
 A sample schema file would look like:
@@ -96,12 +102,19 @@ A sample schema file would look like:
 Required key-value pairs include:
 
 * `endpoint` (String): endpoint to test. This will be resolved to an absolute url using a base url.
-* `description` (String): describes the significance of the Http response.
-* `methods` (Array): all the Http methods to use to test the endpoint
+* `description` (String): describes the significance of the http response.
+* `methods` (Array): all the http methods to use to test the endpoint
   * possible values: `"get"`, `"post"`, `"put"`, `"delete"`
 * `params` (Object): parameters to pass to endpoint.
 
 The rest of the document will be used *as is* in validation.
+
+The test cases are created in the order of:
+
+1. filename of the schema files. e.g. `01-get.json` is used before `02-get.json`
+1. indices of `"methods"` in the schema. e.g. with `["post", "get"]`, `"post"` is used before `"get"`
+
+This allows you to use a sequence in your tests, without having to use any `beforeEach`, any code, etc...
 
 
 ## test output:
