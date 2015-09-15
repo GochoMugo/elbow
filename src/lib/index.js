@@ -132,7 +132,11 @@ function createTestCaseLabel(method, schema) {
  */
 function validateResponse(schema, response, done) {
   debug(`validating response for ${schema.endpoint}`);
-  return validator.validate(response, schema, function(errs) {
+  // testing status code
+  if (schema.status) {
+    should(response.status).eql(schema.status);
+  }
+  return validator.validate(response.body, schema, function(errs) {
     should(errs).not.be.ok();
     return done();
   });
@@ -158,7 +162,7 @@ function makeRequest(baseUrl, method, schema, done) {
         should(err).not.be.ok();
       }
       should(response).be.ok();
-      return validateResponse(schema, response.body, done);
+      return validateResponse(schema, response, done);
     });
 }
 

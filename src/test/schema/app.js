@@ -37,4 +37,10 @@ app.use("/timeout", function(req, res) {
 });
 
 
+app.use("/status", function(req, res) {
+  const status = Number(req.query.status) || req.body.status || 200;
+  return res.status(status).json({ status });
+});
+
+
 export default app;

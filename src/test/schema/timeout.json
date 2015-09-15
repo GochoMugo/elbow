@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/schema#",
 
   "endpoint": "/timeout",
-  "description": "testing the response body only",
+  "description": "testing test case timeouts",
   "methods": ["get"],
 
   "type": "object",
