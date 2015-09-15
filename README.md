@@ -56,6 +56,9 @@ Runs your tests.
 * `schemaDir` (String): path to the directory holding your schemas.
 * `options` (Object): test configurations
   * `options.timeout` (Integer): test-specific timeout
+  * `options.label` (Function):
+    * returns a custom `it` label
+    * signature: `function(method, schema)`
 
 
 ### elbow.schemas(schemaDir, callback)
