@@ -174,7 +174,8 @@ function makeRequest(baseUrl, method, schema, done) {
  */
 function createTestCase(it, baseUrl, method, schema, options) {
   debug(`creating test case for ${method.toUpperCase()} ${schema.endpoint}`);
-  it(createTestCaseLabel(method, schema), function(done) {
+  let label = typeof options.label === "function" ? options.label(method, schema) : createTestCaseLabel(method, schema);
+  it(label, function(done) {
     // allow setting timeouts
     if (options.timeout) {
       this.timeout(options.timeout);
@@ -208,7 +209,9 @@ function createTestCases(it, baseUrl, schema, options) {
  * @param  {Function} it - it from mocha, for test cases
  * @param  {String} baseUrl - base url e.g. "http://localhost:9090/"
  * @param  {String} string - directory containing schemas
- * @param  {Object} options - test configurations
+ * @param  {Object} [options] - test configurations
+ * @param  {Integer} [options.timeout] - timeout used in test cases
+ * @param  {Function} [options.label] - returns a `it` label
  */
 function createTestSuite(it, baseUrl, schemaDir, options={}) {
   debug(`creating test suite for schemas in ${schemaDir}`);
