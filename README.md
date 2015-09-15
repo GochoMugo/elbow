@@ -92,6 +92,7 @@ A sample schema file would look like:
     "amount": 5000
   },
 
+  "status": 200,
   "type": "object",
   "properties": {
     "charge": {
@@ -104,11 +105,15 @@ A sample schema file would look like:
 
 Required key-value pairs include:
 
-* `endpoint` (String): endpoint to test. This will be resolved to an absolute url using a base url.
-* `description` (String): describes the significance of the http response.
+* `endpoint` (String): endpoint to test. This will be resolved to an absolute url using the base url. e.g. `/endpoint`
+* `description` (String): describes the significance of the http response. e.g. `"creating a new resource object"`
 * `methods` (Array): all the http methods to use to test the endpoint
   * possible values: `"get"`, `"post"`, `"put"`, `"delete"`
-* `params` (Object): parameters to pass to endpoint.
+* `params` (Object): parameters to pass to endpoint. e.g. `{ "query": "name" }`
+
+Optional key-value pairs include:
+
+* `status` (Number): response status code. e.g. `201`
 
 The rest of the document will be used *as is* in validation.
 
