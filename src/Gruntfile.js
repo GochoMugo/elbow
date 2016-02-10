@@ -29,5 +29,6 @@ export default function(grunt) {
     },
   });
 
+  grunt.registerTask("default", ["test"]);
   grunt.registerTask("test", ["eslint", "mochaTest"]);
 }
