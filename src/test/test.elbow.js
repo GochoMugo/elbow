@@ -18,6 +18,7 @@ import should from "should";
 import elbow from "../.";
 import testApp from "./schema/app";
 import testSequence from "./sequence/app";
+import testBaseurl from "./baseurl/app";
 
 
 describe("module", function() {
@@ -52,4 +53,15 @@ describe("sequence", function() {
   });
 
   elbow.run(it, `http://localhost:${port}`, path.join(__dirname, "sequence"));
+});
+
+
+describe("api baseurl", function() {
+  const port = 9923;
+
+  before(function(done) {
+    testBaseurl.listen(port, done);
+  });
+
+  elbow.run(it, `http://localhost:${port}/api`, path.join(__dirname, "baseurl"));
 });

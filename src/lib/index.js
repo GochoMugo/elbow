@@ -19,6 +19,7 @@ import url from "url";
 
 
 // npm-installed modules
+import _ from "lodash";
 import Debug from "debug";
 import Jayschema from "jayschema";
 import request from "superagent";
@@ -153,8 +154,10 @@ function validateResponse(schema, response, done) {
  */
 function makeRequest(baseUrl, method, schema, done) {
   debug(`making ${method.toUpperCase()} request to ${schema.endpoint}`);
+  const endpoint = url.resolve(baseUrl + "/", _.trimStart(schema.endpoint, "/"));
+
   return request
-    [getMethodFuncName(method)](url.resolve(baseUrl, schema.endpoint))
+    [getMethodFuncName(method)](endpoint)
     [getParamFuncName(method)](schema.params || { })
     .end(function(err, response) {
       // catch network errors, etc.
