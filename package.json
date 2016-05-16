@@ -31,7 +31,7 @@
     "elbow": "bin/elbow"
   },
   "dependencies": {
-    "cli-output": "^0.1.0",
+    "cli-output": "^1.0.0",
     "commander": "^2.9.0",
     "debug": "^2.2.0",
     "jayschema": "^0.3.1",
@@ -41,17 +41,18 @@
   },
   "devDependencies": {
     "babel-cli": "^6.5.1",
-    "babel-plugin-add-module-exports": "^0.1.2",
+    "babel-plugin-add-module-exports": "^0.2.1",
     "babel-preset-es2015": "^6.5.0",
     "body-parser": "^1.14.2",
     "coveralls": "^2.11.6",
     "express": "^4.13.4",
-    "grunt": "^0.4.5",
-    "grunt-cli": "^0.1.13",
-    "grunt-eslint": "^17.0.0",
+    "grunt": "^1.0.1",
+    "grunt-cli": "^1.2.0",
+    "grunt-eslint": "^18.1.0",
     "grunt-mocha-test": "^0.12.7",
     "istanbul": "^0.4.2",
     "load-grunt-tasks": "^3.4.0",
+    "mocha": "^2.4.5",
     "mocha-lcov-reporter": "^1.0.0"
   }
 }
