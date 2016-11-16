@@ -1,5 +1,6 @@
 language: node_js
 node_js:
-- '4.3'
+- '6'
+- '4'
 script: npm test
 after_script: npm run test-coverage && cat ./coverage/lcov.info | coveralls
