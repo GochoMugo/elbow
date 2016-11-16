@@ -15,7 +15,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 Added:
 
-* Added support for Node.js v4.x series
+* Added support for Node.js v6.x series
 
 Changed:
 
