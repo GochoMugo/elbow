@@ -187,7 +187,7 @@ function createTestCase(it, baseUrl, method, schema, options) {
     if (options.timeout) {
       this.timeout(options.timeout);
     }
-    return makeRequest(baseUrl, method, schema, done);
+    makeRequest(baseUrl, method, schema, done);
   });
 }
 
