@@ -2,7 +2,7 @@
  * Run script for Grunt, task runner
  *
  * The MIT License (MIT)
- * Copyright (c) 2015 GochoMugo <mugo@forfuture.co.ke>
+ * Copyright (c) 2015-2016 GochoMugo <mugo@forfuture.co.ke>
  */
 
 
