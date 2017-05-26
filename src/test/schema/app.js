@@ -1,4 +1,13 @@
-// npm-installed modules
+/*
+ * The MIT License (MIT)
+ * Copyright (c) 2015-2017 GochoMugo <mugo@forfuture.co.ke>
+ *
+ * A server that inspects the requests made by the elbow utility,
+ * while exposing simple schemas for other users.
+ */
+
+
+// installed modules
 import _ from "lodash";
 import bodyParser from "body-parser";
 import express from "express";

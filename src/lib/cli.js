@@ -2,7 +2,7 @@
  * Command-line interface
  *
  * The MIT License (MIT)
- * Copyright (c) 2015-2016 GochoMugo <mugo@forfuture.co.ke>
+ * Copyright (c) 2015-2017 GochoMugo <mugo@forfuture.co.ke>
  */
 
 
@@ -13,26 +13,26 @@
 import path from "path";
 
 
-// npm-installed modules
+// installed modules
 import _ from "lodash";
-import prog from "commander";
+import parser from "commander";
 import out from "cli-output";
 
 
 // own modules
-import elbow from "./index";
+import elbow from ".";
 import pkg from "../package.json";
 
 
-prog
+parser
   .version(pkg.version)
-  .option("-l, --list [schema-dir]", "list schemas")
+  .option("-l, --list [schema-dir]", "list schemas [./schema]")
   .parse(process.argv);
 
 
 // listing schemas
-if (prog.list) {
-  let dirpath = prog.list;
+if (parser.list) {
+  let dirpath = parser.list;
 
   // default to $PWD/schema if no path is provided
   if (dirpath === true) {
@@ -40,13 +40,13 @@ if (prog.list) {
   }
 
   // listing schemas
-  elbow.schemas(dirpath, function(err, schemas) {
-    if (err) {
-      out.error(`error listing schemas: ${err}`);
+  elbow.schemas(dirpath, function(error, schemas) {
+    if (error) {
+      out.error(`error listing schemas: ${error}`);
       return process.exit(1);
     }
 
-    let keys = _.keys(schemas);
+    const keys = _.keys(schemas);
 
     // if no schema was found
     if (keys.length === 0) {

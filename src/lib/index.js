@@ -2,7 +2,7 @@
  * The Elbow
  *
  * The MIT License (MIT)
- * Copyright (c) 2015-2016 GochoMugo <mugo@forfuture.co.ke>
+ * Copyright (c) 2015-2017 GochoMugo <mugo@forfuture.co.ke>
  */
 
 
@@ -18,7 +18,7 @@ import path from "path";
 import url from "url";
 
 
-// npm-installed modules
+// installed modules
 import _ from "lodash";
 import Debug from "debug";
 import Jayschema from "jayschema";
@@ -32,7 +32,7 @@ const validator = new Jayschema(Jayschema.loaders.http);
 
 
 /*
- * Loads all the Schemas into memory
+ * Loads all the Schemas into memory.
  *
  * @param  {String} schemaDir - path to directory holding schemas
  * @param  {Function} callback - callback(err, schemas)
@@ -41,11 +41,10 @@ function requireAll(schemaDir, callback) {
   debug("loading schemas");
 
   let files;
-
   try {
     files = fs.readdirSync(schemaDir);
-  } catch(readdirErr) {
-    return callback(readdirErr);
+  } catch(errReaddir) {
+    return callback(errReaddir);
   }
 
   let schemas = [];
@@ -64,8 +63,8 @@ function requireAll(schemaDir, callback) {
     // try load the schema! If it fails, stop immediately
     try {
       schema = require(abspath);
-    } catch (requireErr) {
-      return callback(requireErr);
+    } catch (errRequire) {
+      return callback(errRequire);
     }
 
     schema.filepath = abspath;
@@ -77,8 +76,12 @@ function requireAll(schemaDir, callback) {
 
 
 /*
- * Determine name of param-sending function to use (on superagent) from the method
+ * Determine name of method function to use (on superagent) from
+ * the method.
+ * This handles mapping the methods we allow in our schemas
+ * to actual functions on the superagent object.
  *
+ * @private
  * @param  {String} method - http method e.g. "get", "post"
  * @return {String} function name e.g. "send"
  */
@@ -94,8 +97,12 @@ function getMethodFuncName(method) {
 
 
 /*
- * Determine name of param-sending function to use (on superagent) from the method
+ * Determine name of param-sending function to use (on superagent) from
+ * the method in the schema.
+ * This handles choosing how the parameters are sent using the
+ * superagent instance.
  *
+ * @private
  * @param  {String} method - http method e.g. "get", "post"
  * @return {String} function name e.g. "send"
  */
@@ -113,23 +120,35 @@ function getParamFuncName(method) {
 
 
 /*
- * Create test case label
+ * Create test case label that is shown in the Mocha UI.
  *
+ * @private
  * @param  {String} method - method used in test case e.g. "get"
  * @param  {Object} schema - schema used in test case
  * @return {String} label used for test case
  */
 function createTestCaseLabel(method, schema) {
-  return `${method.toUpperCase()} ${schema.endpoint || ""} (${schema.description}) [${schema.filepath}]`;
+  return [
+    method.toUpperCase(),
+    schema.endpoint,
+    "(" + schema.description + ")",
+    "[" + schema.filepath + "]",
+  ].join(" ");
 }
 
 
 /*
- * Validate a Http response using schema
+ * Validate a Http response using schema.
+ * This handles the actual JSON schema validation.
  *
+ * @private
  * @param  {Object} schema - schema used to validate against
  * @param  {*} response - http response
  * @param  {Function} done - called once validation is completed
+ *
+ * @TODO Swap validators: 'jayschema' with 'ajv'
+ * @TODO Remove our "extensions" i.e. any custom properties in the
+ *       schema that we have added for the purpose of the elbow utility.
  */
 function validateResponse(schema, response, done) {
   debug(`validating response for ${schema.endpoint}`);
@@ -137,16 +156,18 @@ function validateResponse(schema, response, done) {
   if (schema.status) {
     should(response.status).eql(schema.status);
   }
-  return validator.validate(response.body, schema, function(errs) {
-    should(errs).not.be.ok();
+  return validator.validate(response.body, schema, function(errors) {
+    should(errors).not.be.ok();
     return done();
   });
 }
 
 
 /*
- * Make a Http request with objective of validating its response
+ * Make a HTTP request against the remote server and validate the
+ * response.
  *
+ * @private
  * @param  {String} baseUrl - base url e.g. "http://localhost:9090/"
  * @param  {String} method - http method to use for request e.g. "get"
  * @param  {Object} schema - schema used to validate response
@@ -159,10 +180,10 @@ function makeRequest(baseUrl, method, schema, done) {
   return request
     [getMethodFuncName(method)](endpoint)
     [getParamFuncName(method)](schema.params || { })
-    .end(function(err, response) {
+    .end(function(error, response) {
       // catch network errors, etc.
       if (!response) {
-        should(err).not.be.ok();
+        should(error).not.be.ok();
       }
       should(response).be.ok();
       return validateResponse(schema, response, done);
@@ -171,8 +192,9 @@ function makeRequest(baseUrl, method, schema, done) {
 
 
 /*
- * Create a test case (using "it" from mocha)
+ * Create a test case (using "it" from mocha).
  *
+ * @private
  * @param  {Function} it - it from mocha, for test cases
  * @param  {String} baseUrl - base url e.g. "http://localhost:9090/"
  * @param  {String} method - http method to use for request e.g. "get"
@@ -181,7 +203,9 @@ function makeRequest(baseUrl, method, schema, done) {
  */
 function createTestCase(it, baseUrl, method, schema, options) {
   debug(`creating test case for ${method.toUpperCase()} ${schema.endpoint}`);
-  let label = typeof options.label === "function" ? options.label(method, schema) : createTestCaseLabel(method, schema);
+  const label = typeof options.label === "function" ?
+    options.label(method, schema) :
+    createTestCaseLabel(method, schema) ;
   it(label, function(done) {
     // allow setting timeouts
     if (options.timeout) {
@@ -193,7 +217,7 @@ function createTestCase(it, baseUrl, method, schema, options) {
 
 
 /*
- * Create test cases (to be used in describe)
+ * Create test cases (using "describe" from mocha).
  *
  * @param  {Function} it - it from mocha, for test cases
  * @param  {String} baseUrl - base url e.g. "http://localhost:9090/"
@@ -219,11 +243,15 @@ function createTestCases(it, baseUrl, schema, options) {
  * @param  {Object} [options] - test configurations
  * @param  {Integer} [options.timeout] - timeout used in test cases
  * @param  {Function} [options.label] - returns a `it` label
+ *
+ * @TODO Support 'options.headers'
+ * @TODO Support 'options.qs'
+ * @TODO Support 'options.body'
  */
 function createTestSuite(it, baseUrl, schemaDir, options={}) {
   debug(`creating test suite for schemas in ${schemaDir}`);
-  return requireAll(schemaDir, function(err, schemas) {
-    should(err).not.be.ok();
+  return requireAll(schemaDir, function(error, schemas) {
+    should(error).not.be.ok();
 
     // each schema
     return schemas.forEach(function(schema) {

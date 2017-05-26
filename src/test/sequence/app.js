@@ -1,4 +1,12 @@
-// npm-installed modules
+/*
+ * The MIT License (MIT)
+ * Copyright (c) 2015-2017 GochoMugo <mugo@forfuture.co.ke>
+ *
+ * A server that sends back the qs or body from the incoming request.
+ */
+
+
+// installed modules
 import _ from "lodash";
 import bodyParser from "body-parser";
 import express from "express";

@@ -2,7 +2,7 @@
  * Tests against The Elbow
  *
  * The MIT License (MIT)
- * Copyright (c) 2015-2016 GochoMugo <mugo@forfuture.co.ke>
+ * Copyright (c) 2015-2017 GochoMugo <mugo@forfuture.co.ke>
  */
 
 
@@ -10,12 +10,12 @@
 import path from "path";
 
 
-// npm-installed modules
+// installed modules
 import should from "should";
 
 
 // own modules
-import elbow from "../.";
+import elbow from "..";
 import testApp from "./schema/app";
 import testSequence from "./sequence/app";
 import testBaseurl from "./baseurl/app";
