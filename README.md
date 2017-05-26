@@ -57,7 +57,7 @@ Runs your tests.
 * `it` (Function): it provided by Mocha.
 * `baseUrl` (String): base url of the server. This is used to resolve the relative urls (endpoints).
 * `schemaDir` (String): path to the directory holding your schemas.
-* `options` (Object): test configurations
+* `options` (Object): test configurations <a name="options"></a>
   * `options.timeout` (Integer): test-specific timeout
   * `options.label` (Function):
     * returns a custom `it` label
@@ -65,6 +65,7 @@ Runs your tests.
   * `options.headers` (Object): headers sent on each request. Merged with headers found in schema.
   * `options.query` (Object): query parameters sent on each request. Merged with query found in schema.
   * `options.body` (Object): body parameters sent on each request. Merged with body found in schema.
+  * `options.vars` (Object): variables used in [variable expansions](#vars-expansion).
 
 
 ### elbow.schemas(schemaDir, callback)
@@ -97,7 +98,7 @@ A sample schema file would look like:
     "key": "value"
   },
   "headers": {
-    "key": "value"
+    "Authorization": "${OAUTH_TOKEN}"
   },
   "query": {
     "key": "value"
@@ -132,6 +133,16 @@ Optional key-value pairs include:
 * `status` (Number): response status code. e.g. `201`
 * `params` (Object): **DEPRECATED: Use `headers`, `query` or `body` instead!**
   * parameters to pass to endpoint. e.g. `{ "query": "name" }`
+
+<a name="vars-expansion"></a>
+##### variables expansion:
+
+The `query`, `query` and `body` parameters can contain variables, in the
+form, `${VARIABLE_NAME}`, that will be expanded as necessary. The value
+is determined from `options.vars` (see [above](#options)) or from the process environment.
+If the value could **not** be determined, the variable is **not** expanded
+i.e. is ignored.
+
 
 The rest of the document will be used *as is* in validation.
 

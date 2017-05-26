@@ -37,11 +37,19 @@ describe("actual use case", function() {
   const port = 9095;
 
   before(function(done) {
+    process.env.ELBOW_ENV_VAR = "elbow";
     testApp.listen(port, done);
+  });
+  after(function() {
+    delete process.env.ELBOW_ENV_VAR;
   });
 
   elbow.run(it, `http://localhost:${port}`, path.join(__dirname, "schema"), {
     timeout: 5000,
+    vars: {
+      "VARIABLE": "VALUE",
+      "variable": "value",
+    },
   });
 });
 

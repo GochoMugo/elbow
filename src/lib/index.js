@@ -139,6 +139,38 @@ function createTestCaseLabel(method, schema) {
 }
 
 
+/**
+ * Expand variables, using variables from the `options` object,
+ * or process environment.
+ * Modifies the passed object in place.
+ *
+ * @private
+ * @param  {Object} target - object with parameters
+ * @param  {Object} options - test configurations
+ */
+function expandVars(target, options) {
+  const vars = options.vars || {};
+  const regexp = /\$\{(\w+)\}/g;
+
+  for (let key in target) {
+    const val = target[key];
+    let expanded = val;
+    let match;
+
+    while (match = regexp.exec(val)) {
+      const varname = match[1];
+      const varval = vars[varname] || process.env[varname];
+      if (!varval) {
+        debug(`could not expand variable \${${varname}}`);
+        continue;
+      }
+      expanded = expanded.replace(`\${${varname}}`, varval);
+    }
+    target[key] = expanded;
+  }
+}
+
+
 /*
  * Validate a Http response using schema.
  * This handles the actual JSON schema validation.
@@ -191,14 +223,17 @@ function makeRequest(baseUrl, method, schema, options, done) {
     req = req[getParamFuncName(method)](schema.params);
   }
   if (Object.keys(headers).length) {
+    expandVars(headers, options);
     for (let key in headers) {
       req = req.set(key, headers[key]);
     }
   }
   if (Object.keys(query).length) {
+    expandVars(query, options);
     req = req.query(query);
   }
   if (Object.keys(body).length) {
+    expandVars(body, options);
     req = req.send(body);
   }
 
