@@ -21,6 +21,7 @@ import url from "url";
 // installed modules
 import _ from "lodash";
 import Debug from "debug";
+import depd from "depd";
 import Jayschema from "jayschema";
 import request from "superagent";
 import should from "should";
@@ -28,6 +29,7 @@ import should from "should";
 
 // module variables
 const debug = Debug("elbow:main");
+const deprecate = depd("elbow");
 const validator = new Jayschema(Jayschema.loaders.http);
 
 
@@ -183,7 +185,9 @@ function makeRequest(baseUrl, method, schema, options, done) {
 
   let req = request[getMethodFuncName(method)](endpoint);
 
+  // NOTE/deprecate: params
   if (schema.params) {
+    deprecate("'params' property/extension in schema is deprecated. Use 'headers', 'query' or 'body' instead.");
     req = req[getParamFuncName(method)](schema.params);
   }
   if (Object.keys(headers).length) {

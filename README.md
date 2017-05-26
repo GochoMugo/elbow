@@ -104,7 +104,7 @@ A sample schema file would look like:
   },
   "body": {
     "key": "value"
-  }
+  },
 
   "status": 200,
   "type": "object",
@@ -123,7 +123,6 @@ Required key-value pairs include:
 * `description` (String): describes the significance of the http response. e.g. `"creating a new resource object"`
 * `methods` (Array): all the http methods to use to test the endpoint
   * possible values: `"get"`, `"post"`, `"put"`, `"delete"`
-* `params` (Object): parameters to pass to endpoint. e.g. `{ "query": "name" }`
 
 Optional key-value pairs include:
 
@@ -131,6 +130,8 @@ Optional key-value pairs include:
 * `query` (Object): query parameters to send in request
 * `body` (Object): body to send in request. Only applied if method is `"post"` or `"put"`
 * `status` (Number): response status code. e.g. `201`
+* `params` (Object): **DEPRECATED: Use `headers`, `query` or `body` instead!**
+  * parameters to pass to endpoint. e.g. `{ "query": "name" }`
 
 The rest of the document will be used *as is* in validation.
 

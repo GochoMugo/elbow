@@ -16,6 +16,7 @@ Added:
 
 Changed:
 
+* Deprecate `params` extension in JSON schema
 * Updated dependencies
 
 
