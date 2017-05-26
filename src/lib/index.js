@@ -171,16 +171,34 @@ function validateResponse(schema, response, done) {
  * @param  {String} baseUrl - base url e.g. "http://localhost:9090/"
  * @param  {String} method - http method to use for request e.g. "get"
  * @param  {Object} schema - schema used to validate response
+ * @param  {Object} options - test configurations
  * @param  {Function} done - function called once request is completed
  */
-function makeRequest(baseUrl, method, schema, done) {
+function makeRequest(baseUrl, method, schema, options, done) {
   debug(`making ${method.toUpperCase()} request to ${schema.endpoint}`);
   const endpoint = url.resolve(baseUrl + "/", _.trimStart(schema.endpoint, "/"));
+  const headers = Object.assign({}, options.headers, schema.headers);
+  const query = Object.assign({}, options.query, schema.query);
+  const body = Object.assign({}, options.body, schema.body);
 
-  return request
-    [getMethodFuncName(method)](endpoint)
-    [getParamFuncName(method)](schema.params || { })
-    .end(function(error, response) {
+  let req = request[getMethodFuncName(method)](endpoint);
+
+  if (schema.params) {
+    req = req[getParamFuncName(method)](schema.params);
+  }
+  if (Object.keys(headers).length) {
+    for (let key in headers) {
+      req = req.set(key, headers[key]);
+    }
+  }
+  if (Object.keys(query).length) {
+    req = req.query(query);
+  }
+  if (Object.keys(body).length) {
+    req = req.send(body);
+  }
+
+  return req.end(function(error, response) {
       // catch network errors, etc.
       if (!response) {
         should(error).not.be.ok();
@@ -211,7 +229,7 @@ function createTestCase(it, baseUrl, method, schema, options) {
     if (options.timeout) {
       this.timeout(options.timeout);
     }
-    makeRequest(baseUrl, method, schema, done);
+    makeRequest(baseUrl, method, schema, options, done);
   });
 }
 
@@ -243,10 +261,9 @@ function createTestCases(it, baseUrl, schema, options) {
  * @param  {Object} [options] - test configurations
  * @param  {Integer} [options.timeout] - timeout used in test cases
  * @param  {Function} [options.label] - returns a `it` label
- *
- * @TODO Support 'options.headers'
- * @TODO Support 'options.qs'
- * @TODO Support 'options.body'
+ * @param  {Object} [options.headers] - headers sent on each request
+ * @param  {Object} [options.query] - query parameters sent on each request
+ * @param  {Object} [options.body] - body sent on each request
  */
 function createTestSuite(it, baseUrl, schemaDir, options={}) {
   debug(`creating test suite for schemas in ${schemaDir}`);

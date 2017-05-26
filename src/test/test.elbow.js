@@ -19,6 +19,7 @@ import elbow from "..";
 import testApp from "./schema/app";
 import testSequence from "./sequence/app";
 import testBaseurl from "./baseurl/app";
+import testOptions from "./options/app";
 
 
 describe("module", function() {
@@ -64,4 +65,19 @@ describe("api baseurl", function() {
   });
 
   elbow.run(it, `http://localhost:${port}/api`, path.join(__dirname, "baseurl"));
+});
+
+
+describe("options", function() {
+  const port = 9924;
+
+  before(function(done) {
+    testOptions.listen(port, done);
+  });
+
+  elbow.run(it, `http://localhost:${port}`, path.join(__dirname, "options"), {
+    headers: { "x-key": "value" },
+    query: { key: "value" },
+    body: { key: "value" },
+  });
 });

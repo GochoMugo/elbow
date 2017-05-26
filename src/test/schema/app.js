@@ -36,6 +36,21 @@ app.use("/params", function(req, res) {
 });
 
 
+app.use("/headers", function(req, res) {
+  return res.json(req.headers);
+});
+
+
+app.use("/query", function(req, res) {
+  return res.json(req.query);
+});
+
+
+app.use("/body", function(req, res) {
+  return res.json(req.body);
+});
+
+
 app.use("/timeout", function(req, res) {
   const timeout = 4000;
   setTimeout(function() {

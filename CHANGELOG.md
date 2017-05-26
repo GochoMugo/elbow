@@ -10,6 +10,8 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 Added:
 
+* Added `options.headers`, `options.query` and `options.body`
+* Added `headers`, `query` and `body` extensions in JSON schema
 * Added support for Node.js v5 and v7
 
 Changed:

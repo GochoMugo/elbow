@@ -62,6 +62,9 @@ Runs your tests.
   * `options.label` (Function):
     * returns a custom `it` label
     * signature: `function(method, schema)`
+  * `options.headers` (Object): headers sent on each request. Merged with headers found in schema.
+  * `options.query` (Object): query parameters sent on each request. Merged with query found in schema.
+  * `options.body` (Object): body parameters sent on each request. Merged with body found in schema.
 
 
 ### elbow.schemas(schemaDir, callback)
@@ -87,22 +90,30 @@ A sample schema file would look like:
 {
   "$schema": "http://json-schema.org/schema#",
 
-  "endpoint": "/transactions/transfers/charges",
-  "description": "transfer charges",
-  "methods": ["get", "post"],
+  "endpoint": "/test/endpoint",
+  "description": "test endpoint",
+  "methods": ["post"],
   "params": {
-    "to": "registered",
-    "amount": 5000
+    "key": "value"
   },
+  "headers": {
+    "key": "value"
+  },
+  "query": {
+    "key": "value"
+  },
+  "body": {
+    "key": "value"
+  }
 
   "status": 200,
   "type": "object",
   "properties": {
-    "charge": {
-      "type": "string"
+    "ok": {
+      "type": "boolean"
     }
   },
-  "required": ["charge"]
+  "required": ["ok"]
 }
 ```
 
@@ -116,6 +127,9 @@ Required key-value pairs include:
 
 Optional key-value pairs include:
 
+* `headers` (Object): headers to send in request
+* `query` (Object): query parameters to send in request
+* `body` (Object): body to send in request. Only applied if method is `"post"` or `"put"`
 * `status` (Number): response status code. e.g. `201`
 
 The rest of the document will be used *as is* in validation.
