@@ -8,7 +8,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+Added:
 
+* Added support for Node.js v5 and v7
+
+Changed:
+
+* Updated dependencies
 
 
 ## 1.0.0 - 2016-11-16

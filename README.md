@@ -1,4 +1,3 @@
-
 # elbow
 
 > An **easy** way to test REST API responses with Mocha
@@ -173,4 +172,4 @@ To list your schemas with the respective descriptions.
 
 **The MIT License (MIT)**
 
-Copyright (c) 2015-2016 GochoMugo <mugo@forfuture.co.ke>
+Copyright (c) 2015-2017 GochoMugo <mugo@forfuture.co.ke>
