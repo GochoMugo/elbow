@@ -51,6 +51,14 @@ app.use("/body", function(req, res) {
 });
 
 
+app.use("/ref", function(req, res) {
+  return res.json({
+    type: "string",
+    enum: ["value"],
+  });
+});
+
+
 app.use("/timeout", function(req, res) {
   const timeout = 4000;
   setTimeout(function() {
