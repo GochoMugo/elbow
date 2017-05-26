@@ -8,7 +8,7 @@
     "pretest": "npm run build",
     "test": "grunt test",
     "test-coverage": "istanbul cover _mocha --report lcovonly -- -R spec test/test.*.js",
-    "prepublish": "npm run build",
+    "prepublish": "npm run clean && npm run build",
     "clean": "rm -rf Gruntfile.js lib/ test/"
   },
   "repository": {
