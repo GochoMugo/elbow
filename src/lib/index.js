@@ -55,7 +55,7 @@ function loadSchema(uri) {
 }
 
 
-/*
+/**
  * Loads all the Schemas into memory.
  *
  * @param  {String} schemaDir - path to directory holding schemas
@@ -99,7 +99,7 @@ function requireAll(schemaDir, callback) {
 }
 
 
-/*
+/**
  * Determine name of method function to use (on superagent) from
  * the method.
  * This handles mapping the methods we allow in our schemas
@@ -120,7 +120,7 @@ function getMethodFuncName(method) {
 }
 
 
-/*
+/**
  * Determine name of param-sending function to use (on superagent) from
  * the method in the schema.
  * This handles choosing how the parameters are sent using the
@@ -143,7 +143,7 @@ function getParamFuncName(method) {
 }
 
 
-/*
+/**
  * Create test case label that is shown in the Mocha UI.
  *
  * @private
@@ -201,7 +201,7 @@ function expandVars(target, options) {
 }
 
 
-/*
+/**
  * Validate a Http response using schema.
  * This handles the actual JSON schema validation.
  *
@@ -229,7 +229,7 @@ function validateResponse(schema, response, done) {
 }
 
 
-/*
+/**
  * Make a HTTP request against the remote server and validate the
  * response.
  *
@@ -281,7 +281,7 @@ function makeRequest(baseUrl, method, schema, options, done) {
 }
 
 
-/*
+/**
  * Create a test case (using "it" from mocha).
  *
  * @private
@@ -309,7 +309,7 @@ function createTestCase(it, baseUrl, method, schema, options) {
 }
 
 
-/*
+/**
  * Create test cases (using "describe" from mocha).
  *
  * @param  {Function} it - it from mocha, for test cases
@@ -327,7 +327,7 @@ function createTestCases(it, baseUrl, schema, options) {
 }
 
 
-/*
+/**
  * Create test suite
  *
  * @param  {Function} it - it from mocha, for test cases

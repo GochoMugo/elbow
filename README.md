@@ -8,14 +8,16 @@
  [![Coverage Status](https://coveralls.io/repos/GochoMugo/elbow/badge.svg?branch=master)](https://coveralls.io/r/GochoMugo/elbow?branch=master)
  [![Dependency Status](https://gemnasium.com/GochoMugo/elbow.svg)](https://gemnasium.com/GochoMugo/elbow)
 
-elbow = [mocha](http://mochajs.org/) + [superagent](http://visionmedia.github.io/superagent/) + [jayschema](https://github.com/natesilva/jayschema) + [awesomeness](https://www.dropbox.com/s/flwsp52rm1r9xrw/awesomeness.jpg?dl=0)
+elbow = [mocha](http://mochajs.org/) + [superagent](http://visionmedia.github.io/superagent/) + [ajv](https://github.com/epoberezkin/ajv)
 
 
 ## what makes it easy?
 
-1. you only write one, short test file with one test suite
-1. your schemas define what endpoints they are tested against
-1. it fits just right in your work flow
+1. Utilizes the power of [JSON Schema](http://json-schema.org/) (see [also](http://spacetelescope.github.io/understanding-json-schema/UnderstandingJSONSchema.pdf)).
+1. You do not need to write code for interacting with the API.
+1. Your schemas define what endpoints they are tested against, along with
+  parameters, such as request headers and body.
+1. Offers a gentle learning curve.
 
 
 ## usage:
@@ -23,10 +25,10 @@ elbow = [mocha](http://mochajs.org/) + [superagent](http://visionmedia.github.io
 A sample test script:
 
 ```js
-var elbow = require("elbow");
+const elbow = require("elbow");
 
 describe("testing Http Responses", function() {
-  elbow.run(it, "http://localhost:9090/", __dirname + "/../schema", {
+  elbow.run(it, "http://localhost:9090/", `${__dirname}/../schema`, {
     timeout: 5000,
   });
 });
@@ -47,7 +49,7 @@ See a [sample test output](#output).
 ## API:
 
 ```js
-var elbow = require("elbow");
+const elbow = require("elbow");
 ```
 
 ### elbow.run(it, baseUrl, schemaDir [, options])
@@ -80,7 +82,7 @@ Loads your schemas.
 
 ## schemas:
 
-Schemas, as defined in its [specification](http://spacetelescope.github.io/understanding-json-schema/UnderstandingJSONSchema.pdf), are valid JSON documents.
+Schemas, as defined in its [specification](http://json-schema.org/), are valid JSON documents.
 
 All the schemas should be placed in a single directory. They should have the extension `.json`.
 
@@ -135,7 +137,7 @@ Optional key-value pairs include:
   * parameters to pass to endpoint. e.g. `{ "query": "name" }`
 
 <a name="vars-expansion"></a>
-##### variables expansion:
+##### variable expansion:
 
 The `endpoint`, `headers`, `query` and `body` parameters can contain variables, in the
 form, `${VARIABLE_NAME}`, that will be expanded as necessary. The value
@@ -191,7 +193,7 @@ To list your schemas with the respective descriptions.
 
 ### notes:
 
-1. synchronous file operations are used internally to ensure test cases are executed in correct order by mocha.
+1. **Synchronous** file operations are used internally to ensure test cases are executed in correct order by mocha.
 
 
 ## license:
