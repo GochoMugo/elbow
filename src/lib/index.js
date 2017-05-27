@@ -20,9 +20,9 @@ import url from "url";
 
 // installed modules
 import _ from "lodash";
+import Ajv from "ajv";
 import Debug from "debug";
 import depd from "depd";
-import Jayschema from "jayschema";
 import request from "superagent";
 import should from "should";
 
@@ -30,7 +30,29 @@ import should from "should";
 // module variables
 const debug = Debug("elbow:main");
 const deprecate = depd("elbow");
-const validator = new Jayschema(Jayschema.loaders.http);
+const validator = new Ajv({ loadSchema });
+
+
+/**
+ * Loads schema from remote server using a HTTP URI.
+ *
+ * @private
+ * @param  {String} uri - HTTP URI to schema
+ * @return {Promise}
+ * @see https://github.com/epoberezkin/ajv#asynchronous-schema-compilation
+ */
+function loadSchema(uri) {
+  return new Promise(function(resolve, reject) {
+    request.get(uri).end(function(error, response) {
+      if (error || !response.ok) {
+        error = error || new Error(response.body);
+        debug("error fetching remote schema:", error);
+        return reject(error);
+      }
+      return resolve(response.body);
+    });
+  });
+}
 
 
 /*
@@ -198,10 +220,12 @@ function validateResponse(schema, response, done) {
   if (schema.status) {
     should(response.status).eql(schema.status);
   }
-  return validator.validate(response.body, schema, function(errors) {
+  const valid = schema.validate(response.body);
+  if (!valid) {
+    const errors = schema.validate.errors;
     should(errors).not.be.ok();
-    return done();
-  });
+  }
+  return done();
 }
 
 
@@ -277,7 +301,10 @@ function createTestCase(it, baseUrl, method, schema, options) {
     if (options.timeout) {
       this.timeout(options.timeout);
     }
-    makeRequest(baseUrl, method, schema, options, done);
+    validator.compileAsync(schema).then((validate) => {
+      schema.validate = validate;
+      makeRequest(baseUrl, method, schema, options, done);
+    }).catch(done);
   });
 }
 

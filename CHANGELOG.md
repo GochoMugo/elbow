@@ -19,6 +19,7 @@ Added:
 Changed:
 
 * Deprecate `params` extension in JSON schema
+* Replaced [JaySchema](https://github.com/natesilva/jayschema) with [Ajv](https://github.com/epoberezkin/ajv) for schema validation
 * Updated dependencies
 
 
