@@ -12,7 +12,8 @@ Added:
 
 * Added `options.headers`, `options.query` and `options.body`
 * Added `headers`, `query` and `body` extensions in JSON schema
-* Added variable expansion for header, query and body parameters
+* Added variable expansion for `endpoint`, `headers`, `query` and `body`
+  extensions in JSON schema
 * Added support for Node.js v5 and v7
 
 Changed:

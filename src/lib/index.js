@@ -145,15 +145,23 @@ function createTestCaseLabel(method, schema) {
  * Modifies the passed object in place.
  *
  * @private
- * @param  {Object} target - object with parameters
+ * @param  {String|Object} target - object with parameters
  * @param  {Object} options - test configurations
+ * @return {String|Object}
  */
 function expandVars(target, options) {
   const vars = options.vars || {};
   const regexp = /\$\{(\w+)\}/g;
 
+  if (typeof target === "string") {
+    return _expand(target);
+  }
   for (let key in target) {
-    const val = target[key];
+    target[key] = _expand(target[key]);
+  }
+  return target;
+
+  function _expand(val) {
     let expanded = val;
     let match;
 
@@ -166,7 +174,7 @@ function expandVars(target, options) {
       }
       expanded = expanded.replace(`\${${varname}}`, varval);
     }
-    target[key] = expanded;
+    return expanded;
   }
 }
 
@@ -210,12 +218,13 @@ function validateResponse(schema, response, done) {
  */
 function makeRequest(baseUrl, method, schema, options, done) {
   debug(`making ${method.toUpperCase()} request to ${schema.endpoint}`);
-  const endpoint = url.resolve(baseUrl + "/", _.trimStart(schema.endpoint, "/"));
+  const endpoint = expandVars(schema.endpoint, options);
+  const apiPath = url.resolve(baseUrl + "/", _.trimStart(endpoint, "/"));
   const headers = Object.assign({}, options.headers, schema.headers);
   const query = Object.assign({}, options.query, schema.query);
   const body = Object.assign({}, options.body, schema.body);
 
-  let req = request[getMethodFuncName(method)](endpoint);
+  let req = request[getMethodFuncName(method)](apiPath);
 
   // NOTE/deprecate: params
   if (schema.params) {

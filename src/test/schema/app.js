@@ -42,6 +42,10 @@ app.use("/headers", function(req, res) {
 
 
 app.use("/query", function(req, res) {
+  const elbowVar = process.env.ELBOW_ENV_VAR;
+  if (elbowVar && ["/", `/${elbowVar}`].indexOf(req.path) === -1) {
+    return res.status(404).end();
+  }
   return res.json(req.query);
 });
 

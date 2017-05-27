@@ -137,7 +137,7 @@ Optional key-value pairs include:
 <a name="vars-expansion"></a>
 ##### variables expansion:
 
-The `query`, `query` and `body` parameters can contain variables, in the
+The `endpoint`, `headers`, `query` and `body` parameters can contain variables, in the
 form, `${VARIABLE_NAME}`, that will be expanded as necessary. The value
 is determined from `options.vars` (see [above](#options)) or from the process environment.
 If the value could **not** be determined, the variable is **not** expanded

@@ -1,7 +1,7 @@
 {
   "$schema": "http://json-schema.org/schema#",
 
-  "endpoint": "/query",
+  "endpoint": "/query/${ELBOW_ENV_VAR}",
   "description": "testing variables",
   "methods": ["get", "post", "put", "delete"],
   "query": {
@@ -12,6 +12,7 @@
     "unexpanded": "${unexpanded}"
   },
 
+  "status": 200,
   "type": "object",
   "properties": {
     "ELBOW_ENV_VAR": {
