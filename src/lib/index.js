@@ -210,7 +210,6 @@ function expandVars(target, options) {
  * @param  {*} response - http response
  * @param  {Function} done - called once validation is completed
  *
- * @TODO Swap validators: 'jayschema' with 'ajv'
  * @TODO Remove our "extensions" i.e. any custom properties in the
  *       schema that we have added for the purpose of the elbow utility.
  */
@@ -276,6 +275,7 @@ function makeRequest(baseUrl, method, schema, options, done) {
         should(error).not.be.ok();
       }
       should(response).be.ok();
+      should(response.body).be.ok();
       return validateResponse(schema, response, done);
     });
 }
