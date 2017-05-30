@@ -208,23 +208,35 @@ function expandVars(target, options) {
  * @private
  * @param  {Object} schema - schema used to validate against
  * @param  {*} response - http response
+ * @param  {Object} options - test configurations
  * @param  {Function} done - called once validation is completed
  *
  * @TODO Remove our "extensions" i.e. any custom properties in the
  *       schema that we have added for the purpose of the elbow utility.
  */
-function validateResponse(schema, response, done) {
+function validateResponse(schema, response, options, done) {
   debug(`validating response for ${schema.endpoint}`);
   // testing status code
   if (schema.status) {
     should(response.status).eql(schema.status);
   }
-  const valid = schema.validate(response.body);
-  if (!valid) {
-    const errors = schema.validate.errors;
-    should(errors).not.be.ok();
-  }
-  return done();
+  return validator.compileAsync(schema).then((validate) => {
+    const valid = validate(response.body);
+    if (!valid) {
+      const errors = validate.errors;
+      should(errors).not.be.ok();
+      return done(errors);
+    }
+    if (schema.export) {
+      const body = response.body;
+      options.vars = options.vars || {};
+      for (let dest in schema.export) {
+        const propPath = schema.export[dest];
+        _.set(options.vars, dest, _.get(body, propPath));
+      }
+    }
+    return done(null, response);
+  }).catch(done);
 }
 
 
@@ -270,14 +282,14 @@ function makeRequest(baseUrl, method, schema, options, done) {
   }
 
   return req.end(function(error, response) {
-      // catch network errors, etc.
-      if (!response) {
-        should(error).not.be.ok();
-      }
-      should(response).be.ok();
-      should(response.body).be.ok();
-      return validateResponse(schema, response, done);
-    });
+    // catch network errors, etc.
+    if (!response) {
+      should(error).not.be.ok();
+    }
+    should(response).be.ok();
+    should(response.body).be.ok();
+    return validateResponse(schema, response, options, done);
+  });
 }
 
 
@@ -301,17 +313,15 @@ function createTestCase(it, baseUrl, method, schema, options) {
     if (options.timeout) {
       this.timeout(options.timeout);
     }
-    validator.compileAsync(schema).then((validate) => {
-      schema.validate = validate;
-      makeRequest(baseUrl, method, schema, options, done);
-    }).catch(done);
+    makeRequest(baseUrl, method, schema, options, done);
   });
 }
 
 
 /**
- * Create test cases (using "describe" from mocha).
+ * Create test cases.
  *
+ * @private
  * @param  {Function} it - it from mocha, for test cases
  * @param  {String} baseUrl - base url e.g. "http://localhost:9090/"
  * @param  {Object} schema - schema used to validate response
@@ -328,19 +338,66 @@ function createTestCases(it, baseUrl, schema, options) {
 
 
 /**
+ * Create test setup hook (using "before" from mocha).
+ *
+ * @private
+ * @param  {Function} before - 'before' from mocha, for setup hook
+ * @param  {String} baseUrl - base URL e.g. "http://localhost:9090/"
+ * @param  {String} schemaDir - directory containing schemas
+ * @param  {Object} options - test configurations
+ */
+function createSetupHook(before, baseUrl, schemaDir, options) {
+  before("setup", function(done) {
+    debug("running test setup");
+    if (options.timeout) {
+      this.timeout(options.timeout);
+    }
+
+    const setupPath = path.join(schemaDir, "setup");
+    requireAll(setupPath, function(error, schemas) {
+      if (error) return done(error);
+      let promise = Promise.resolve();
+      schemas.forEach(function(schema) {
+        promise = promise.then(function() { return _setup(schema); });
+      });
+      promise.then(done).catch(done);
+    });
+  });
+  function _setup(schema) {
+    return new Promise(function(resolve, reject) {
+      const method = schema.methods[0];
+      makeRequest(baseUrl, method, schema, options, function(error, response) {
+        if (error) {
+          return reject(error);
+        }
+        return resolve();
+      });
+    });
+  }
+}
+
+
+/**
  * Create test suite
  *
  * @param  {Function} it - it from mocha, for test cases
  * @param  {String} baseUrl - base url e.g. "http://localhost:9090/"
- * @param  {String} string - directory containing schemas
+ * @param  {String} schemaDir - directory containing schemas
  * @param  {Object} [options] - test configurations
  * @param  {Integer} [options.timeout] - timeout used in test cases
  * @param  {Function} [options.label] - returns a `it` label
  * @param  {Object} [options.headers] - headers sent on each request
  * @param  {Object} [options.query] - query parameters sent on each request
  * @param  {Object} [options.body] - body sent on each request
+ * @param  {Object} [options.vars] - variables used in expansion
+ * @param  {Function} [options.before] - 'before' from mocha, for setup
+ * @param  {String} [options.beforeBaseUrl] - base url, for setup
  */
 function createTestSuite(it, baseUrl, schemaDir, options={}) {
+  if (options.before) {
+    debug(`creating test setup for schemas in ${schemaDir}`);
+    createSetupHook(options.before, options.beforeBaseUrl || baseUrl, schemaDir, options);
+  }
   debug(`creating test suite for schemas in ${schemaDir}`);
   return requireAll(schemaDir, function(error, schemas) {
     should(error).not.be.ok();

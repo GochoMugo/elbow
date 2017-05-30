@@ -20,6 +20,11 @@ import testApp from "./schema/app";
 import testSequence from "./sequence/app";
 import testBaseurl from "./baseurl/app";
 import testOptions from "./options/app";
+import testSetup from "./setup/app";
+
+
+// module variables
+let portIndex = 9345;
 
 
 describe("module", function() {
@@ -34,6 +39,7 @@ describe("module", function() {
 
 
 describe("actual use case", function() {
+  // TODO: allow '$ref' to NOT require to be hard-coded!
   const port = 9095;
 
   before(function(done) {
@@ -55,7 +61,7 @@ describe("actual use case", function() {
 
 
 describe("sequence", function() {
-  const port = 9097;
+  const port = portIndex++;
 
   before(function(done) {
     testSequence.listen(port, done);
@@ -66,7 +72,7 @@ describe("sequence", function() {
 
 
 describe("api baseurl", function() {
-  const port = 9923;
+  const port = portIndex++;
 
   before(function(done) {
     testBaseurl.listen(port, done);
@@ -77,7 +83,7 @@ describe("api baseurl", function() {
 
 
 describe("options", function() {
-  const port = 9924;
+  const port = portIndex++;
 
   before(function(done) {
     testOptions.listen(port, done);
@@ -87,5 +93,19 @@ describe("options", function() {
     headers: { "x-key": "value" },
     query: { key: "value" },
     body: { key: "value" },
+  });
+});
+
+
+describe("setup", function() {
+  const port = portIndex++;
+
+  before(function(done) {
+    testSetup.listen(port, done);
+  });
+
+  elbow.run(it, `http://localhost:${port}/api`, path.join(__dirname, "setup"), {
+    before,
+    beforeBaseUrl: `http://localhost:${port}`,
   });
 });

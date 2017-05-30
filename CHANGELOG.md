@@ -11,9 +11,10 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 Added:
 
 * Added `options.headers`, `options.query` and `options.body`
-* Added `headers`, `query` and `body` extensions in JSON schema
+* Added `headers`, `query`, `body`, `export` extensions in JSON schema
 * Added variable expansion for `endpoint`, `headers`, `query` and `body`
   extensions in JSON schema
+* Added setup hook (`options.before`, `options.beforeUrl`)
 * Added support for Node.js v5 and v7
 
 Changed:

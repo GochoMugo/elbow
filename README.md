@@ -56,8 +56,8 @@ const elbow = require("elbow");
 
 Runs your tests.
 
-* `it` (Function): it provided by Mocha.
-* `baseUrl` (String): base url of the server. This is used to resolve the relative urls (endpoints).
+* `it` (Function): `it` provided by Mocha.
+* `baseUrl` (String): base URL of the server. This is used to resolve the relative urls (endpoints).
 * `schemaDir` (String): path to the directory holding your schemas.
 * `options` (Object): test configurations <a name="options"></a>
   * `options.timeout` (Integer): test-specific timeout
@@ -68,6 +68,9 @@ Runs your tests.
   * `options.query` (Object): query parameters sent on each request. Merged with query found in schema.
   * `options.body` (Object): body parameters sent on each request. Merged with body found in schema.
   * `options.vars` (Object): variables used in [variable expansions](#vars-expansion).
+  * `options.before` (Function): `before` by Mocha; Makes elbow look for **setup** schemas
+  in the `setup` directory in `schemaDir`. These schemas are run before any test cases.
+  * `options.beforeBaseUrl` (String): base URL used in setup. Otherwise `baseUrl` is used.
 
 
 ### elbow.schemas(schemaDir, callback)
@@ -116,7 +119,11 @@ A sample schema file would look like:
       "type": "boolean"
     }
   },
-  "required": ["ok"]
+  "required": ["ok"],
+
+  "export": {
+    "var_name": "ok"
+  }
 }
 ```
 
@@ -133,6 +140,7 @@ Optional key-value pairs include:
 * `query` (Object): query parameters to send in request
 * `body` (Object): body to send in request. Only applied if method is `"post"` or `"put"`
 * `status` (Number): response status code. e.g. `201`
+* `export` (Object): variables to be exported. See [exporting variables](#vars-export)
 * `params` (Object): **DEPRECATED: Use `headers`, `query` or `body` instead!**
   * parameters to pass to endpoint. e.g. `{ "query": "name" }`
 
@@ -144,6 +152,39 @@ form, `${VARIABLE_NAME}`, that will be expanded as necessary. The value
 is determined from `options.vars` (see [above](#options)) or from the process environment.
 If the value could **not** be determined, the variable is **not** expanded
 i.e. is ignored.
+
+
+<a name="vars-export"></a>
+##### variable exports:
+
+The `export` parameter is used to export variables from the test case making
+them available for any following test cases. The key-value pairs under
+`export` are such that: they key defines the name of the variable and
+the value defines the **path in the response body** to the property to
+be used. For example, if response body was:
+
+```json
+{
+  "setup": {
+    "token": "am.a.token"
+  }
+}
+```
+
+and the `export` parameter was:
+
+```json
+{
+  "export": {
+    "setup_token": "setup.token"
+  }
+}
+```
+
+would export the variable `${setup_token}` with value `"am.a.token"` at
+path `setup.token`. Any following schemas [sic: read test cases] can access
+`${setup_token}` and it'll resolve successfully.
+See [lodash.get](https://lodash.com/docs/#get)/[lodash.set](https://lodash.com/docs/#set).
 
 
 The rest of the document will be used *as is* in validation.
