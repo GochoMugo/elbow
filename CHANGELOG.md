@@ -15,7 +15,7 @@ Added:
 * Added variable expansion for `endpoint`, `headers`, `query` and `body`
   extensions in JSON schema
 * Added setup hook (`options.before`, `options.beforeUrl`)
-* Added support for Node.js v5 and v7
+* Added support for Node.js v5, v7 and v8
 
 Changed:
 
