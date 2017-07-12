@@ -59,10 +59,19 @@ function loadSchema(uri) {
  * Loads all the Schemas into memory.
  *
  * @param  {String} schemaDir - path to directory holding schemas
+ * @param  {Object} [options]
+ * @param  {String[]} [options.extensions=["json"]] Extension of schema files
  * @param  {Function} callback - callback(err, schemas)
  */
-function requireAll(schemaDir, callback) {
+function requireAll(schemaDir, options, callback) {
   debug("loading schemas");
+  if (!callback) {
+    callback = options;
+    options = {};
+  }
+  const opts = _.assign({
+    extensions: ["json"],
+  }, options);
 
   let files;
   try {
@@ -75,9 +84,9 @@ function requireAll(schemaDir, callback) {
 
   for (let index = 0; index < files.length; index++) {
     const file = files[index];
+    const ext = path.extname(file).slice(1);
 
-    // if it is NOT a json file, ignore it
-    if (path.extname(file) !== ".json") {
+    if (opts.extensions.indexOf(ext) === -1) {
       continue;
     }
 
@@ -354,7 +363,7 @@ function createSetupHook(before, baseUrl, schemaDir, options) {
     }
 
     const setupPath = path.join(schemaDir, "setup");
-    requireAll(setupPath, function(error, schemas) {
+    requireAll(setupPath, options, function(error, schemas) {
       if (error) return done(error);
       let promise = Promise.resolve();
       schemas.forEach(function(schema) {
@@ -392,6 +401,7 @@ function createSetupHook(before, baseUrl, schemaDir, options) {
  * @param  {Object} [options.vars] - variables used in expansion
  * @param  {Function} [options.before] - 'before' from mocha, for setup
  * @param  {String} [options.beforeBaseUrl] - base url, for setup
+ * @param  {String[]} [options.extensions] - extensions of schemas
  */
 function createTestSuite(it, baseUrl, schemaDir, options={}) {
   if (options.before) {
@@ -399,7 +409,7 @@ function createTestSuite(it, baseUrl, schemaDir, options={}) {
     createSetupHook(options.before, options.beforeBaseUrl || baseUrl, schemaDir, options);
   }
   debug(`creating test suite for schemas in ${schemaDir}`);
-  return requireAll(schemaDir, function(error, schemas) {
+  return requireAll(schemaDir, options, function(error, schemas) {
     should(error).not.be.ok();
 
     // each schema

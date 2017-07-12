@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 Added:
 
-* Added `options.headers`, `options.query` and `options.body`
+* Added `options.headers`, `options.query`, `options.body` and `options.extensions`
 * Added `headers`, `query`, `body`, `export` extensions in JSON schema
 * Added variable expansion for `endpoint`, `headers`, `query` and `body`
   extensions in JSON schema

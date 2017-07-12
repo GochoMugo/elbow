@@ -7,11 +7,13 @@
 
 
 // built-in modules
+import fs from "fs";
 import path from "path";
 
 
 // installed modules
 import should from "should";
+import yaml from "js-yaml";
 
 
 // own modules
@@ -25,6 +27,12 @@ import testSetup from "./setup/app";
 
 // module variables
 let portIndex = 9345;
+
+
+// Allow us to 'require('filename.yml')'
+require.extensions[".yml"] = function(mod, filename) {
+  mod.exports = yaml.safeLoad(fs.readFileSync(filename, "utf8"));
+};
 
 
 describe("module", function() {
@@ -107,5 +115,18 @@ describe("setup", function() {
   elbow.run(it, `http://localhost:${port}/api`, path.join(__dirname, "setup"), {
     before,
     beforeBaseUrl: `http://localhost:${port}`,
+  });
+});
+
+
+describe("extensions", function() {
+  const port = portIndex++;
+
+  before(function(done) {
+    testApp.listen(port, done);
+  });
+
+  elbow.run(it, `http://localhost:${port}`, path.join(__dirname, "extensions"), {
+    extensions: ["yml"],
   });
 });

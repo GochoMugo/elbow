@@ -71,6 +71,7 @@ Runs your tests.
   * `options.before` (Function): `before` by Mocha; Makes elbow look for **setup** schemas
   in the `setup` directory in `schemaDir`. These schemas are run before any test cases.
   * `options.beforeBaseUrl` (String): base URL used in setup. Otherwise `baseUrl` is used.
+  * `options.extensions` (String[]): extensions of schema files to be used. Defaults to `["json"]`. See [using other file formats](#file-formats).
 
 
 ### elbow.schemas(schemaDir, callback)
@@ -186,6 +187,34 @@ path `setup.token`. Any following schemas [sic: read test cases] can access
 `${setup_token}` and it'll resolve successfully.
 See [lodash.get](https://lodash.com/docs/#get)/[lodash.set](https://lodash.com/docs/#set).
 
+
+<a name="file-formats"></a>
+##### using other file formats:
+
+You can use other file formats such as [JSON5](http://json5.org/) and [YAML](http://yaml.org/).
+Before using `describe()` you need to install the `require` extension
+for your file format. For example,
+
+```js
+const fs = require("fs");
+const yaml = require("js-yaml");
+const elbow = require("elbow");
+
+require.extensions[".yml"] = function(mod, filename) {
+  mod.exports = yaml.safeLoad(fs.readFileSync(filename, "utf8"));
+};
+
+describe("using yaml", function() {
+  elbow.run(it, "http://localhost:8080", path.join(__dirname, "example"), {
+    extensions: ["yml"],
+  });
+});
+```
+
+You can now write your schema files in YAML e.g. `example.yml`.
+
+
+---
 
 The rest of the document will be used *as is* in validation.
 
