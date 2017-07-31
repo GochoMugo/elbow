@@ -8,6 +8,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+
+
+
+## 1.1.0 - 2017-07-31
+
 Added:
 
 * Added `options.headers`, `options.query`, `options.body` and `options.extensions`

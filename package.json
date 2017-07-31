@@ -1,6 +1,6 @@
 {
   "name": "elbow",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "An easy way to test REST API responses with Mocha",
   "main": "lib/index.js",
   "scripts": {
