@@ -8,3 +8,6 @@ node_modules/
 
 # error logs
 *.log
+
+# test coverage output
+coverage/
