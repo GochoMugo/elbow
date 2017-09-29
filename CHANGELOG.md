@@ -11,6 +11,13 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 
 
+## 1.1.1 - 2017-09-29
+
+Changed:
+
+* Update dependencies (`superagent` critical vulnerability)
+
+
 ## 1.1.0 - 2017-07-31
 
 Added:
