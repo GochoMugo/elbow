@@ -17,7 +17,7 @@
     "url": "git+https://github.com/GochoMugo/elbow.git"
   },
   "engines": {
-    "node": ">=4"
+    "node": ">=10"
   },
   "keywords": [
     "REST",
