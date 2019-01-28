@@ -13,6 +13,7 @@ Added:
 
 Changed:
 * Dropped support for Node.js v4, v5, v6, v7, v8
+* Updated dependencies
 
 
 ## 1.1.1 - 2017-09-29
